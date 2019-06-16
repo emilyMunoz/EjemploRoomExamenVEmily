@@ -25,46 +25,42 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerView = findViewById(R.id.recyclerview_tasks);
+        recyclerView = findViewById(R.id.recyclerview_medida);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         buttonAddTask = findViewById(R.id.floating_button_add);
         buttonAddTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
+                Intent intent = new Intent(MainActivity.this, AddMedidaActivity.class);
                 startActivity(intent);
             }
         });
-
-
-        getTasks();
-
+        getMedidas();
     }
 
-
-    private void getTasks() {
-        class GetTasks extends AsyncTask<Void, Void, List<Task>> {
+    private void getMedidas() {
+        class GetMedidas extends AsyncTask<Void, Void, List<Medida>> {
 
             @Override
-            protected List<Task> doInBackground(Void... voids) {
-                List<Task> taskList = DatabaseClient
+            protected List<Medida> doInBackground(Void... voids) {
+                List<Medida> medidaList = DatabaseClientMedida
                         .getInstance(getApplicationContext())
-                        .getAppDatabase()
-                        .taskDao()
+                        .getAppDatabaseMedia()
+                        .medidaDAO()
                         .getAll();
-                return taskList;
+                return medidaList;
             }
 
             @Override
-            protected void onPostExecute(List<Task> tasks) {
-                super.onPostExecute(tasks);
-                TasksAdapter adapter = new TasksAdapter(MainActivity.this, tasks);
+            protected void onPostExecute(List<Medida> medida) {
+                super.onPostExecute(medida);
+               MedidasAdapter adapter = new MedidasAdapter(MainActivity.this, medida);
                 recyclerView.setAdapter(adapter);
             }
         }
 
-        GetTasks gt = new GetTasks();
+        GetMedidas gt = new GetMedidas();
         gt.execute();
     }
 }
